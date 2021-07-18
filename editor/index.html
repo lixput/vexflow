@@ -1,0 +1,58 @@
+<head>
+    <base href=".">
+    <link rel="stylesheet" href="score.css">
+</head>
+
+<div id="boo"></div>
+
+<button id="toggleStems" type="submit" onclick="toggleStems()">Toggle TEST stems</button>
+<button id="addWholeNote" type="submit" onclick="addNote('w')">Whole Note</button>
+<button id="addHalfNote" type="submit" onclick="addNote('h')">Half Note</button>
+<button id="addQuarterNote" type="submit">Quarter Note</button>
+<button id="addEighthNote" type="submit" onclick="addNote('8')">Eighth Note</button>
+<button id="addSixteenthNote" type="submit" onclick="addNote('16')">Add 16th Note</button>
+<input id="transposesteps" type="number" value="1" min="1">
+<button id="transposeup" type="submit">Transpose up</button>
+<button id="transposedown" type="submit">Transpose down</button>
+<button id="addbar" type="submit" onclick="addEmptyStave()">Add new bar</button>
+
+<br>
+
+
+Pitch: <span id="pitch"></span><br>
+Duration: <span id="duration"></span>
+
+
+<script src="../build/vexflow-debug.js"></script>
+<!-- <script type="module" src="virtualscore.ts"></script> -->
+<script src="newscore.js" type="text/javascript"></script>
+<!-- <script type="module" src="score.js"></script> -->
+
+<!-- <script >newScore();</script> -->
+
+<script>
+    document.getElementById("transposeup").addEventListener("click", function(){
+        transpose(TRANSPOSE_UP, parseInt(document.getElementById("transposesteps").value));
+    });
+    document.getElementById("transposedown").addEventListener("click", function(){
+        transpose(TRANSPOSE_DOWN, parseInt(document.getElementById("transposesteps").value));
+    });
+    document.getElementById("addQuarterNote").addEventListener("click", function(){
+        score.addNoteAtIndex({clef: "treble", keys: ["f/4"], duration: "q", auto_stem: true});
+    });
+    window.addEventListener('keydown', (e) => {
+        if (e.code === "ArrowLeft" || e.code === "ArrowRight" || e.code === "ArrowDown" || e.code === "ArrowUp") e.preventDefault();
+    })
+    window.addEventListener('keyup', (e) => {
+        if (e.code === "ArrowUp") score.moveIndex(0, -1);
+        else if (e.code === "ArrowDown") score.moveIndex(0, 1);
+        else if (e.code === "ArrowRight") score.moveIndex(1, 0);
+        else if (e.code === "ArrowLeft") score.moveIndex(-1, 0);
+        else if (e.code === "Escape") clearFocus();
+        else if (e.code === "Delete") convertFocusedNoteToRest();
+
+        return false;
+    })
+
+</script>
+
