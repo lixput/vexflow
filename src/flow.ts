@@ -76,6 +76,9 @@ import { VibratoBracket } from './vibratobracket';
 import { Voice } from './voice';
 import { Volta } from './stavevolta';
 
+import { VirtualScore } from '../editor/virtualscore';
+import { Measure } from '../editor/measure';
+
 export const Flow = {
   ...Tables,
 
@@ -155,4 +158,6 @@ export const Flow = {
   VibratoBracket,
   Voice,
   Volta,
+  Measure,
+  VirtualScore,
 };

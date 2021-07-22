@@ -17,6 +17,7 @@ export class Measure {
   protected keySignature : string;
   protected timeSignature : string;
 
+  protected first : boolean = false;
   protected firstInLine : boolean = false;
   protected last : boolean = false;
 
@@ -108,20 +109,25 @@ export class Measure {
     return this.stave;
   }
 
-  showClef(show : boolean) : void{
-    if (show) this.stave.addClef(this.clef);
+  setFirst(first : boolean = true) : void{
+    this.first = first;
+    if (first){
+      this.stave.addClef(this.clef);
+      this.stave.addKeySignature(this.keySignature, '');
+      this.stave.addTimeSignature(this.timeSignature);
+    }
   }
 
-  showKeySignature(show : boolean) : void {
-    if (show) this.stave.addKeySignature(this.keySignature, '');
-  }
-
-  showTimeSignature (show : boolean) : void{
-    if (show) this.stave.addTimeSignature(this.timeSignature);
+  isFirst() : boolean{
+    return this.first;
   }
 
   setFirstInLine(first : boolean = true) : void{
     this.firstInLine = first;
+    if (first){
+      this.stave.addClef(this.clef);
+      this.stave.addKeySignature(this.keySignature, '');
+    }
   }
 
   isFirstInLine() : boolean{
@@ -130,6 +136,9 @@ export class Measure {
 
   setLast(last : boolean = true) : void{
     this.last = last;
+    if (last){
+      this.stave.setEndBarType(Flow.Barline.type.END);
+    }
   }
 
   isLast() : boolean{

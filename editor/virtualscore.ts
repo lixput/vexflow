@@ -134,12 +134,9 @@ export class VirtualScore {
     let numStaves = this.getNumberOfStaves();
     let numMeasures = this.getNumberOfMeasures();
     
-    let showClef = true;
-    let showKeySignature = true;
-    let showTimeSignature = true;
-    let showEndline = false;
-
     let firstInLine = false;
+    let firstMeasure = false;
+    let lastMeasure = false;
 
     let xRight = this.xLeft;
     let yBottom = this.yTop;
@@ -147,30 +144,25 @@ export class VirtualScore {
     for (let m = 0; m < this.measureMatrix.length; m++){
       if (m == 0){
         //first measure
-        showClef = true;
-        showKeySignature = true;
-        showTimeSignature = true;
-        firstInLine = true;
-
+        firstInLine = false;
+        firstMeasure = true;
       }
       else if (xRight + this.measureWidth > this.rendererWidth){
         //line break
         firstInLine = true;
+        firstMeasure = false;
+
         xRight = this.xLeft;
         yBottom += numStaves * this.spaceBetweenStaves + this.spaceBetweenSystems;
-        showClef = true;
-        showKeySignature = true;
-        showTimeSignature = false;
       }
       else{
         //normal measure
-        showClef = false;
-        showKeySignature = false;
-        showTimeSignature = false;
+        firstInLine = false;
+        firstMeasure = false;
       }
 
       if (m == numMeasures - 1){
-        showEndline = true;
+        lastMeasure = true;
       }
 
       let measureY = yBottom;
@@ -178,14 +170,12 @@ export class VirtualScore {
       //Layout stave by stave
       for (let s = 0; s<numStaves; s++){
         let measure = this.measureMatrix[m][s];
+        measure.setFirst(firstMeasure);
         measure.setFirstInLine(firstInLine);
-        measure.setLast(showEndline);
+        measure.setLast(lastMeasure);
         measure.setX(xRight);
         measure.setY(measureY);
         measure.setWidth(this.measureWidth);
-        measure.showClef(showClef);
-        measure.showKeySignature(showKeySignature);
-        measure.showTimeSignature(showTimeSignature);
 
         measureY += this.spaceBetweenStaves;
       }
@@ -224,7 +214,7 @@ export class VirtualScore {
 
     for (let m = 0; m<numMeasures; m++){
       let measure = this.measureMatrix[m][0];
-      connectLeft = measure.isFirstInLine();
+      connectLeft = measure.isFirstInLine() || measure.isFirst();
       showEndline = measure.isLast();
       for (let s = 0; s<this.measureMatrix[m].length; s++){
         measure = this.measureMatrix[m][s];
